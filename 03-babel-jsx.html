@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .formata {
+            font-family: 'Courier New', monospace;
+            color: blue;
+            background-color: powderblue;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+        .alerta {
+            border-radius: 6px;
+            border: 2px solid tomato;
+            background-color: coral;
+            color: white;
+            padding: 6px;
+        }
+    </style>
+</head>
+<body>
+    <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+    <div id="root"></div>
+
+    <script type="text/babel">
+        
+        // Div1, criada com React "cru"
+        const div1 = React.createElement('div', {
+            className: 'formata',
+            children: 'DIV criada com React "cru"'
+        })
+
+        // Div2, criada com JSX e processada pelo Babel
+        const div2 = <div className="formata">Div criada com JSX+Babel</div>
+
+        const className = 'formata'
+        let children = 'Div criada com JSX+Babel usando variáveis interpoladas'
+
+        // Para exibir o conteúdo de variáveis dentro do JSX, as colocamos entre {}
+        const div3 = <div className={className}> {children} </div>
+
+        children = 'Div criada com JSX+Babel usando espalhamento de props'
+
+        // Formando um objeto de props usando propriedades abreviadas
+        const props = {className, children}
+        console.log({props})
+
+        // Quando as props de um elemento estão dentro de um objeto cujas propriedades
+        // têm o mesmo nome das props, pode-se usar a sintaxe de espalhamento para
+        // criar o elemento
+        let div4 = <div {...props} />
+        // Em JSX, pode-seu usar /> no final da tag, no lugar da tag de fechamento </elemento>
+
+        // container também criado com React "cru"
+        // const container = React.createElement('div', { id: "container"}, [
+        //     div1,
+        //     div2,
+        //     div3,
+        //     div4
+        // ])
+
+        const containerJsx = 
+            <div id="container">
+                {div1}
+                {div2}
+                {div3}
+                {div4}
+            </div>
+
+        const root = ReactDOM.createRoot(document.getElementById('root'))
+        //root.render(container)
+        root.render(containerJsx)
+    </script>
+    
+</body>
+</html>
