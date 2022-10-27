@@ -9,9 +9,24 @@ import {PokemonForm, fetchPokemon, PokemonInfoFallback , PokemonDataView} from '
 function PokemonInfo({pokemonName}) {
 
   // 🐨 crie o estado para o pokémon (null)
-  const [pokemon, setPokemon] = React.useState(null)
-  const [error, setError] = React.useState(null)
-  const [status, setStatus] = React.useState('idle')//Ocioso
+  // const [pokemon, setPokemon] = React.useState(null)
+  // const [error, setError] = React.useState(null)
+  // const [status, setStatus] = React.useState('idle')//Ocioso
+
+  const [state, setState] = React.useState({
+    pokemon:null,
+    error:null,
+    status:'idle'
+  })
+  // Criando constantes somente-leitura por meio de desestruturação da variavel de estado do objeto
+  const{pokemon, error, status} = state
+
+  // useEffect() para contagem da quantidade de atualizações do componenete. Nesse caso, não vamos colocar o vetor de dependêcias, 
+  //  fazendo assim com que o useEffect() seja executado em Qualquer atualização
+  React.useEffect( () => {
+    console.count('COMPONENTE ATUALIZADO')  
+    console.log({state})
+  })
 
   // 🐨 crie React.useEffect de modo a ser chamado sempre que pokemonName mudar.
   // 💰 NÃO SE ESQUEÇA DO VETOR DE DEPENDÊNCIAS!
@@ -23,10 +38,15 @@ function PokemonInfo({pokemonName}) {
 
     // 🐨 antes de chamar `fetchPokemon`, limpe o estado atual do pokemon
     // ajustando-o para null.
-    setPokemon(null)
-    setError(null)
-    setStatus('idle')
 
+    
+    // let newState = {...state} //  Tira uma copia do objeto de estado
+    // newState.pokemon = null
+    // newState.error = null
+    // newState.status = 'idle'
+    // setState(newState)
+    setState({...state, pokemon: null, error: null, status: 'idle'})
+    
     // (Isso é para habilitar o estado de carregamento ao alternar entre diferentes
     // pokémon.)
     // 💰 Use a função `fetchPokemon` para buscar um pokémon pelo seu nome:
@@ -45,15 +65,13 @@ function PokemonInfo({pokemonName}) {
 
     async function getData(){
       try {
-        setStatus('pending')
+        setState({...state, status: 'pending' })
         const pokemonData = await fetchPokemon(pokemonName)
-        setPokemon(pokemonData)
-        setStatus('resolved')
+        setState({...state, pokemon: pokemonData, status: 'resolved'})
       }
       catch(error){
         //Armazena o erro para posterior exibiçãoo
-        setError(error)
-        setStatus('rejected')
+        setState({...state, error: error, status: 'rejected'})
       }
     }
     getData()
