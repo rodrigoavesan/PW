@@ -2,63 +2,87 @@ import React from 'react';
 import Box from '@mui/material/Box';
 import { DataGrid } from '@mui/x-data-grid';
 import api from '../lib/api';
+import CheckBoxIcon from '@mui/icons-material/CheckBox';
+import CheckBoxOutlineBlankIcon from '@mui/icons-material/CheckBoxOutlineBlank';
 
 const columns = [
-    { field: 'id', headerName: 'ID', width: 90 },
+    { field: 'id', headerName: 'CÓD', type:'number', width: 90 },
     {
-      field: 'firstName',
-      headerName: 'First name',
-      width: 150,
-      editable: true,
+      field: 'marca',
+      headerName: ' Marca',
+      width: 200,
+      //Concatenando as informações de marca e modelo numa mesma coluna
+      valueGetter: params => params.row?.marca + '' + params.row?.modelo
     },
     {
-      field: 'lastName',
-      headerName: 'Last name',
-      width: 150,
-      editable: true,
-    },
-    {
-      field: 'age',
-      headerName: 'Age',
+      field: 'ano_fabricacao',
+      headerName: 'Ano Fabri.',
       type: 'number',
       width: 110,
-      editable: true,
     },
     {
-      field: 'fullName',
-      headerName: 'Full name',
-      description: 'This column has a value getter and is not sortable.',
-      sortable: false,
-      width: 160,
-      valueGetter: (params) =>
-        `${params.row.firstName || ''} ${params.row.lastName || ''}`,
+      field: 'cor',
+      headerName: 'Cor',
+      hearderAlign: 'center',   //Alinhamento do cabeçalho
+      align: 'center',          //Alinhamento da célula de dados
+      width: 110,
     },
+    {
+      field: 'placa',
+      headerName: 'Placa',
+      hearderAlign: 'center',   //Alinhamento do cabeçalho
+      align: 'center',          //Alinhamento da célula de dados
+      width: 110,
+    },
+    {
+      field: 'importado',
+      headerName: 'Importado',
+      hearderAlign: 'center',   //Alinhamento do cabeçalho
+      align: 'center',          //Alinhamento da célula de dados
+      width: 110,
+      renderCell: params => (
+        parseInt(params.row?.importado) ? <CheckBoxIcon/> : <CheckBoxOutlineBlankIcon/>
+      )
+    },
+    {
+      field: 'preco',
+      headerName: 'Preço Venda',
+      type: 'number',
+      width: 120,
+      valueGetter: params => (
+        //Formatadando o preço números conforme usados no Brasil(pt-br) e em moeda real brasileiro(BRL )
+       Number( params.row?.preco).toLocaleString('pt-br', {
+         style: 'currency',
+          currency:'BRL'})
+      )
+    },
+    
   ];
   
-  const rows = [
-    { id: 1, lastName: 'Snow', firstName: 'Jon', age: 35 },
-    { id: 2, lastName: 'Lannister', firstName: 'Cersei', age: 42 },
-    { id: 3, lastName: 'Lannister', firstName: 'Jaime', age: 45 },
-    { id: 4, lastName: 'Stark', firstName: 'Arya', age: 16 },
-    { id: 5, lastName: 'Targaryen', firstName: 'Daenerys', age: null },
-    { id: 6, lastName: 'Melisandre', firstName: null, age: 150 },
-    { id: 7, lastName: 'Clifford', firstName: 'Ferrara', age: 44 },
-    { id: 8, lastName: 'Frances', firstName: 'Rossini', age: 36 },
-    { id: 9, lastName: 'Roxie', firstName: 'Harvey', age: 65 },
-  ];
+  
 
 export default function KarangoList() {
+
+
+  const [state, setState] = React.useState({
+    karangos:[] //Vetor Vazio
+  })
+  const {karangos} = state
 
     // useEffect() com vetor de dependências vazio para ser executado apenas uma vez no momento da montagem do componente
     React.useEffect(() => {
         //Buscar os dados da API remota
+        fetchData()
     }, [])
 
     async function fetchData(){
         try{
             const response = await api.get('karangos')
             //Armazenar o response em um variavel de estado
+            console.log({Response: response.data})
+            setState({...state,karangos:response.data})
         }
+
         catch(error){
             alert('ERRO' + error.message)
         }
@@ -69,13 +93,12 @@ export default function KarangoList() {
             <h1>Listagem de Karangos</h1>
                 <Box sx={{ height: 400, width: '100%' }}>
                     <DataGrid
-                    rows={rows}
+                    rows={karangos}
                     columns={columns}
-                    pageSize={5}
+                    pageSize={10}
                     rowsPerPageOptions={[5]}
-                    checkboxSelection
-                    disableSelectionOnClick
-                    experimentalFeatures={{ newEditingApi: true }}
+                   autoHeight
+                   disableSelectionOnClick
             />
                 </Box>
         </>
