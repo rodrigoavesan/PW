@@ -10,65 +10,41 @@ import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import ConfirmDialog from '../ui/ConfirmDialog'
 import Notification from '../ui/Notification'
 
-export default function KarangoList() {
+export default function ClienteList() {
 
   const columns = [
-    { 
-      field: 'id',        // Campo nos dados retornados pela API
-      headerName: 'Cód.',
-      type: 'number',     // Coluna fica alinhada à direita
-      width: 90 
+ 
+    {
+      field: 'nome',
+      headerName: 'Nome',
+      width: 200,
     },
     {
-      field: 'marca',
-      headerName: 'Marca/Modelo',
+      field: 'cpf',
+      headerName: 'CPF',
+      type: 'number',
+      width: 300
+    },
+    {
+      field: 'municipio',
+      headerName: 'Municipio/UF', 
+      align: 'center',        
       width: 300,
-      // Concatenando as informações de marca e modelo numa mesma coluna
-      valueGetter: params => params.row?.marca + ' ' + params.row?.modelo
+      valueGetter: params => params.row?.municipio + ' ' + params.row?.uf
     },
     {
-      field: 'ano_fabricacao',
-      headerName: 'Ano Fabr.',
-      type: 'number',
-      width: 110
+      field: 'telefone',
+      headerName: 'Telefone',
+      align: 'center',
+      type: 'number',         
+      width: 200,
+
     },
     {
-      field: 'cor',
-      headerName: 'Cor',
-      headerAlign: 'center',    // Alinhamento do cabeçalho
-      align: 'center',          // Alinhamento da célula de dados
-      width: 110
-    },
-    {
-      field: 'placa',
-      headerName: 'Placa',
-      headerAlign: 'center',    // Alinhamento do cabeçalho
-      align: 'center',          // Alinhamento da célula de dados
-      width: 110
-    },
-    {
-      field: 'importado',
-      headerName: 'Importado',
-      headerAlign: 'center',    // Alinhamento do cabeçalho
-      align: 'center',          // Alinhamento da célula de dados
-      width: 110,
-      renderCell: params => (
-        parseInt(params.row?.importado) ? <CheckCircleIcon /> : <RadioButtonUncheckedIcon />
-      )
-    },
-    {
-      field: 'preco',
-      headerName: 'Preço Venda',
-      type: 'number',
-      width: 120,
-      valueGetter: params => (
-        // Formatando o preço para números conforme usados no Brasil (pt-BR)
-        // e em moeda real brasilero (BRL)
-        Number(params.row?.preco).toLocaleString('pt-BR', { 
-          style: 'currency', 
-          currency: 'BRL' 
-        })
-      )
+      field: 'email',
+      headerName: 'Email',
+      width: 200,
+     
     },
     {
       field: 'editar',
@@ -98,13 +74,13 @@ export default function KarangoList() {
   ];
 
   const [state, setState] = React.useState({
-    karangos: [],       // Vetor vazio,
+    clientes: [],       // Vetor vazio,
     deleteId: null,     // id do registro a ser excluído
     dialogOpen: false,  // se o diálogo de confirmação está aberto ou não,
     notifSeverity: '',  // Severidade da notificação
     notifMessage: ''    // Mensagem de notificação
   })
-  const { karangos, deleteId, dialogOpen, notifSeverity, notifMessage } = state
+  const { clientes, deleteId, dialogOpen, notifSeverity, notifMessage } = state
 
   function handleDeleteClick(id) {
     setState({
@@ -123,9 +99,9 @@ export default function KarangoList() {
 
   async function fetchData(newState = state) {
     try {
-      const response = await api.get('karangos')
+      const response = await api.get('clientes')
       // Armazenar o response em um variável de estado
-      setState({...newState, karangos: response.data})
+      setState({...newState, clientes: response.data})
     }
     catch (error) {
       setState({
@@ -140,7 +116,7 @@ export default function KarangoList() {
     let newState = {...state, dialogOpen: false}
     if(answer) {
       try {
-        await api.delete(`karangos/${deleteId}`)
+        await api.delete(`clientes/${deleteId}`)
         newState = {
           ...newState,
           notifSeverity: 'success',
@@ -170,7 +146,7 @@ export default function KarangoList() {
 
   return (
     <>
-      <h1>Listagem de Karangos</h1>
+      <h1>Listagem de clientes</h1>
       
       <ConfirmDialog
         title="Confirmação necessária"
@@ -201,7 +177,7 @@ export default function KarangoList() {
               visibility: 'visible'
             }
           }}
-          rows={karangos}
+          rows={clientes}
           columns={columns}
           pageSize={10}
           rowsPerPageOptions={[5]}

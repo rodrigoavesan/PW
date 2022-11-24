@@ -1,7 +1,7 @@
-import React from 'react';
+import React from 'react'
 
 export default function KarangoForm() {
-    return(
+    return (
         <>
             <h1>Cadastro de Karangos</h1>
         </>

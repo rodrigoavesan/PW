@@ -17,36 +17,55 @@ export default function MainMenu() {
 
   return (
     <div>
-        <IconButton 
-            id="basic-button"
-            edge="start" 
-            color="inherit" 
-            aria-label="menu" 
-            sx={{ mr: 2 }}
-            aria-controls={open ? 'basic-menu' : undefined}
-            aria-haspopup="true"
-            aria-expanded={open ? 'true' : undefined}
-            onClick={handleClick}>
-                
-
-            <MenuIcon />
-        </IconButton>
-    
-        <Menu
+      <IconButton 
+        id="basic-button"
+        edge="start" 
+        color="inherit" 
+        aria-label="menu"
+        sx={{ mr: 2 }}
+        aria-controls={open ? 'basic-menu' : undefined}
+        aria-haspopup="true"
+        aria-expanded={open ? 'true' : undefined}
+        onClick={handleClick}
+      >
+        <MenuIcon />
+      </IconButton>
+      
+      <Menu
         id="basic-menu"
         anchorEl={anchorEl}
         open={open}
         onClose={handleClose}
         MenuListProps={{
-            'aria-labelledby': 'basic-button',
+          'aria-labelledby': 'basic-button',
         }}
+      >
+
+        <MenuItem 
+          component={Link} 
+          to="/karango"
+          onClick={handleClose}
         >
+          Listagem de karangos
+        </MenuItem>
 
-          <MenuItem onClick={handleClose}  component={Link} to="/karango" >Listagem de Karangos</MenuItem>
-          <MenuItem onClick={handleClose}  component={Link} to="/karango/novo" >Cadastro de Karangos</MenuItem>
+        <MenuItem 
+          component={Link} 
+          to="/karango/novo"
+          onClick={handleClose}
+        >
+          Cadastro de karangos
+        </MenuItem>
 
+        <MenuItem 
+          component={Link} 
+          to="/clientes"
+          onClick={handleClose}
+        >
+          Listagem de cliente
+        </MenuItem>
         
-        </Menu>
+      </Menu>
     </div>
   );
 }
